@@ -3,8 +3,9 @@
 vim.pack.add({
 -- colorscheme plugins
 "https://github.com/catppuccin/nvim.git",
+"https://github.com/vague2k/vague.nvim.git",
 
--- telescope plugins
+-- telescope and dependency plugins
 "https://github.com/nvim-lua/plenary.nvim.git",
 "https://github.com/nvim-telescope/telescope.nvim.git",
 "https://github.com/nvim-treesitter/nvim-treesitter.git",
@@ -20,6 +21,10 @@ vim.pack.add({
 
 -- icons
 "https://github.com/nvim-tree/nvim-web-devicons.git",
+
+-- neotree and dependency plugins
+"https://github.com/nvim-neo-tree/neo-tree.nvim.git",
+"https://github.com/MunifTanjim/nui.nvim.git",
 
 })
 
@@ -58,6 +63,16 @@ function _lazygit_toggle()
   lazygit:toggle()
 end
 
+
+-- Function to toggle NeoTree focus
+_G.toggle_neotree_focus = function()
+    if vim.bo.filetype == "neo-tree" then
+        vim.cmd("wincmd p")
+    else
+        vim.cmd("Neotree focus")
+    end
+end
+
 -- mappings
 vim.g.mapleader = " "
 
@@ -93,6 +108,10 @@ vim.api.nvim_set_keymap('n', ']b', '<cmd>bnext<CR>', { noremap = true, silent = 
 -- Previous buffer
 vim.api.nvim_set_keymap('n', '[b', '<cmd>bprevious<CR>', { noremap = true, silent = true, desc = 'Previous buffer' })
 
+-- neotree mappings
+vim.api.nvim_set_keymap('n', '<leader>e', '<cmd>Neotree toggle<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>o', ':lua toggle_neotree_focus()<CR>', { noremap = true, silent = true })
+
 -- telescope
 vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'Telescope find files' })
 vim.keymap.set('n', '<leader>fw', builtin.live_grep, { desc = 'Telescope live grep' })
@@ -109,7 +128,7 @@ vim.keymap.set('n', '<leader>gg', _lazygit_toggle, { noremap = true, silent = tr
 
 
 -- options
--- vim.cmd.colorscheme "catppuccin"
+vim.cmd("colorscheme vague")
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.wo.winfixwidth = true
