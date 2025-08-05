@@ -96,6 +96,7 @@ vim.api.nvim_set_keymap('n', '[b', '<cmd>bprevious<CR>', { noremap = true, silen
 -- telescope
 vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'Telescope find files' })
 vim.keymap.set('n', '<leader>fw', builtin.live_grep, { desc = 'Telescope live grep' })
+vim.keymap.set('n', '<leader>ft', function() require('telescope.builtin').colorscheme({ enable_preview = true }) end, { desc = 'Find themes' })
 
 -- session lookup
 vim.keymap.set("n", "<leader>fs", "<cmd>SessionSearch<CR>", { desc = "Find session" })
