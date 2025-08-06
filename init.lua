@@ -26,6 +26,9 @@ vim.pack.add({
 "https://github.com/nvim-neo-tree/neo-tree.nvim.git",
 "https://github.com/MunifTanjim/nui.nvim.git",
 
+-- center buffer for ultrawide monitor
+"https://github.com/shortcuts/no-neck-pain.nvim.git",
+
 })
 
 -- requirements
@@ -105,6 +108,8 @@ vim.api.nvim_set_keymap('n', '<leader>C', '<cmd>bdelete!<CR>', { noremap = true,
 vim.api.nvim_set_keymap('n', ']b', '<cmd>bnext<CR>', { noremap = true, silent = true, desc = 'Next buffer' })
 -- Previous buffer
 vim.api.nvim_set_keymap('n', '[b', '<cmd>bprevious<CR>', { noremap = true, silent = true, desc = 'Previous buffer' })
+-- center buffer
+vim.api.nvim_set_keymap('n', '<leader>cb', '<cmd>NoNeckPain<CR>', { noremap = true, silent = true, desc = 'Center buffer'})
 
 -- neotree mappings
 vim.api.nvim_set_keymap('n', '<leader>e', '<cmd>Neotree toggle<CR>', { noremap = true, silent = true })
