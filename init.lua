@@ -81,8 +81,6 @@ vim.keymap.set('n', '<leader>w', ':write<CR>', {noremap = true})
 vim.keymap.set('n', '<leader>q', ':quit<CR>', {noremap = true})
 vim.keymap.set('n', '<leader>x', ':qa<CR>', {noremap = true})
 
-vim.keymap.set('n', '<leader>o', ':update<CR> :source<CR>', {noremap = true})
-
 -- splits
 vim.keymap.set('n', '|', ':vs<CR>', {noremap = true, desc = "Vertical Split"})
 vim.keymap.set('n', '\\', '<cmd>split<CR><C-w>w',{noremap = true, desc = "Horizontal Split"})
