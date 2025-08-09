@@ -28,6 +28,7 @@ vim.pack.add({
 
 	-- lsp format and stuff
 	"https://github.com/neovim/nvim-lspconfig.git",
+	"https://github.com/ms-jpq/coq_nvim.git",
 })
 
 -- requirements
@@ -52,7 +53,8 @@ require("oil").setup()
 -- language servers install via package manager
 vim.lsp.enable('jdtls')    -- Java
 vim.lsp.enable('clangd')   -- C/C++
-vim.lsp.enable('tsserver') -- JavaScript/TypeScript
+-- vim.lsp.enable('typescript-language-server') -- JavaScript/TypeScript
+vim.lsp.enable('ts_ls') -- JavaScript/TypeScript
 vim.lsp.enable('pyright')  -- Python
 vim.lsp.enable('bashls')   -- Bash
 vim.lsp.enable('lua_ls')   -- Lua
