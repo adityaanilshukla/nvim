@@ -26,9 +26,9 @@ vim.pack.add({
 	-- center buffer for ultrawide monitor
 	"https://github.com/shortcuts/no-neck-pain.nvim.git",
 
-	-- lsp format and stuff
+	-- Language features and development tools
 	"https://github.com/neovim/nvim-lspconfig.git",
-	"https://github.com/ms-jpq/coq_nvim.git",
+	"https://github.com/numToStr/Comment.nvim.git",
 })
 
 -- requirements
@@ -50,14 +50,18 @@ local Terminal = require('toggleterm.terminal').Terminal
 require 'nvim-web-devicons'.setup {}
 require("oil").setup()
 
+
+
+local lsp = require "lspconfig"
+
 -- language servers install via package manager
-vim.lsp.enable('jdtls')    -- Java
-vim.lsp.enable('clangd')   -- C/C++
--- vim.lsp.enable('typescript-language-server') -- JavaScript/TypeScript
-vim.lsp.enable('ts_ls') -- JavaScript/TypeScript
-vim.lsp.enable('pyright')  -- Python
-vim.lsp.enable('bashls')   -- Bash
-vim.lsp.enable('lua_ls')   -- Lua
+vim.lsp.enable('jdtls')   -- Java
+vim.lsp.enable('clangd')  -- C/C++
+vim.lsp.enable('typescript-language-server') -- JavaScript/TypeScript
+vim.lsp.enable('ts_ls')   -- JavaScript/TypeScript
+vim.lsp.enable('pyright') -- Python
+vim.lsp.enable('bashls')  -- Bash
+vim.lsp.enable('lua_ls')  -- Lua
 
 -- custom functions
 
@@ -83,11 +87,13 @@ end
 vim.g.mapleader = " "
 
 -- writing and saving
-vim.keymap.set('n', '<leader>w', ':write<CR>', { noremap = true })
-vim.keymap.set('n', '<leader>q', ':quit<CR>', { noremap = true })
-vim.keymap.set('n', '<leader>x', ':qa<CR>', { noremap = true })
-vim.keymap.set('n', '<leader>o', ':source<CR>', { noremap = true })
-vim.keymap.set('n', '<leader>lf', vim.lsp.buf.format)
+vim.keymap.set('n', '<leader>w', ':silent write<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>q', ':quit<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>x', ':qa<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>o', ':source<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('v', '<leader>/', '<esc><cmd>lua require("Comment.api").toggle.linewise(vim.fn.visualmode())<CR>',
+	{ noremap = true, silent = true, desc = "Toggle comment for selection" })
+vim.keymap.set('n', '<leader>lf', vim.lsp.buf.format, { noremap = true, silent = true })
 
 -- splits
 vim.keymap.set('n', '|', ':vs<CR>', { noremap = true, desc = "Vertical Split" })
@@ -161,3 +167,4 @@ vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,
 vim.o.showtabline = 2
 vim.opt.termguicolors = true
 vim.o.signcolumn = "yes"
+
