@@ -132,6 +132,7 @@ vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'Telescope find f
 vim.keymap.set('n', '<leader>fw', builtin.live_grep, { desc = 'Telescope live grep' })
 vim.keymap.set('n', '<leader>ft', function() require('telescope.builtin').colorscheme({ enable_preview = true }) end,
 	{ desc = 'Find themes' })
+vim.keymap.set('n', '<leader>h', require('telescope.builtin').help_tags, { desc = 'Search help tags' })
 
 -- session lookup
 vim.keymap.set("n", "<leader>fs", "<cmd>SessionSearch<CR>", { desc = "Find session" })
