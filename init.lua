@@ -168,4 +168,4 @@ vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,
 vim.o.showtabline = 2
 vim.opt.termguicolors = true
 vim.o.signcolumn = "yes"
-
+vim.o.winborder = "rounded"
