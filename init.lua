@@ -52,18 +52,25 @@ local Terminal = require('toggleterm.terminal').Terminal
 require 'nvim-web-devicons'.setup {}
 require("oil").setup()
 
+-- loop through all the language servers and set them up
+local lsp = require("lspconfig")
+local servers = {
+	"jdtls", "clangd", "ts_ls", "pyright", "bashls", "lua_ls",
+}
 
-
-local lsp = require "lspconfig"
-
--- language servers install via package manager
-vim.lsp.enable('jdtls')                      -- Java
-vim.lsp.enable('clangd')                     -- C/C++
-vim.lsp.enable('typescript-language-server') -- JavaScript/TypeScript
-vim.lsp.enable('ts_ls')                      -- JavaScript/TypeScript
-vim.lsp.enable('pyright')                    -- Python
-vim.lsp.enable('bashls')                     -- Bash
-vim.lsp.enable('lua_ls')                     -- Lua
+for _, srv in ipairs(servers) do
+	if lsp[srv] then
+		if srv == "lua_ls" then
+			lsp.lua_ls.setup({
+				settings = { Lua = { diagnostics = { globals = { "vim" } } } }
+			})
+		else
+			lsp[srv].setup({})
+		end
+	else
+		vim.notify("LSP '" .. srv .. "' not found in lspconfig", vim.log.levels.WARN)
+	end
+end
 
 -- custom functions
 
