@@ -2,6 +2,8 @@
 vim.pack.add({
 	-- colorscheme plugins
 	"https://github.com/vague2k/vague.nvim.git",
+	"https://github.com/rebelot/kanagawa.nvim.git",
+	"https://github.com/EdenEast/nightfox.nvim.git",
 
 	-- telescope and dependency plugins
 	"https://github.com/nvim-lua/plenary.nvim.git",
@@ -55,13 +57,13 @@ require("oil").setup()
 local lsp = require "lspconfig"
 
 -- language servers install via package manager
-vim.lsp.enable('jdtls')   -- Java
-vim.lsp.enable('clangd')  -- C/C++
+vim.lsp.enable('jdtls')                      -- Java
+vim.lsp.enable('clangd')                     -- C/C++
 vim.lsp.enable('typescript-language-server') -- JavaScript/TypeScript
-vim.lsp.enable('ts_ls')   -- JavaScript/TypeScript
-vim.lsp.enable('pyright') -- Python
-vim.lsp.enable('bashls')  -- Bash
-vim.lsp.enable('lua_ls')  -- Lua
+vim.lsp.enable('ts_ls')                      -- JavaScript/TypeScript
+vim.lsp.enable('pyright')                    -- Python
+vim.lsp.enable('bashls')                     -- Bash
+vim.lsp.enable('lua_ls')                     -- Lua
 
 -- custom functions
 
@@ -145,7 +147,7 @@ vim.keymap.set('n', '<leader>gg', _lazygit_toggle, { noremap = true, silent = tr
 
 
 -- options
-vim.cmd("colorscheme vague")
+vim.cmd("colorscheme carbonfox")
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.wo.winfixwidth = true
@@ -161,7 +163,6 @@ vim.o.laststatus = 0
 vim.opt.backup = false
 vim.opt.writebackup = false
 vim.opt.undofile = false
-vim.opt.signcolumn = "no"
 vim.opt.foldcolumn = "0"
 vim.opt.showcmd = false
 vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
