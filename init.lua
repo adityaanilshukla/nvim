@@ -4,7 +4,6 @@ vim.pack.add({
 	"https://github.com/vague2k/vague.nvim.git",
 	"https://github.com/rebelot/kanagawa.nvim.git",
 	"https://github.com/EdenEast/nightfox.nvim.git",
-
 	-- telescope and dependency plugins
 	"https://github.com/nvim-lua/plenary.nvim.git",
 	"https://github.com/nvim-telescope/telescope.nvim.git",
@@ -22,7 +21,7 @@ vim.pack.add({
 	-- icons
 	"https://github.com/nvim-tree/nvim-web-devicons.git",
 
-	-- Neotree 
+	-- Neotree
 	"https://github.com/nvim-neo-tree/neo-tree.nvim.git",
 	"https://github.com/MunifTanjim/nui.nvim.git",
 
@@ -32,6 +31,8 @@ vim.pack.add({
 	-- Language features and development tools
 	"https://github.com/neovim/nvim-lspconfig.git",
 	"https://github.com/numToStr/Comment.nvim.git",
+	"https://github.com/Saghen/blink.cmp.git",
+
 })
 
 -- requirements
@@ -52,6 +53,32 @@ local Terminal = require('toggleterm.terminal').Terminal
 
 require 'nvim-web-devicons'.setup {}
 require("neo-tree").setup()
+
+require("blink.cmp").setup({ fuzzy = { implementation = "lua", } })
+local capabilities = require("blink.cmp").get_lsp_capabilities()
+
+local lspconfig = require("lspconfig")
+local servers = {
+	"lua_ls", "ts_ls", "pyright", "clangd", "bashls", "jdtls",
+}
+
+for _, server in ipairs(servers) do
+	if lspconfig[server] then
+		local config = { capabilities = capabilities }
+
+		if server == "lua_ls" then
+			config.settings = {
+				Lua = {
+					diagnostics = { globals = { "vim" } },
+				},
+			}
+		end
+
+		lspconfig[server].setup(config)
+	else
+		vim.notify("LSP '" .. server .. "' not found", vim.log.levels.WARN)
+	end
+end
 
 -- loop through all the language servers and set them up
 local lsp = require("lspconfig")
@@ -95,52 +122,52 @@ end
 
 -- Function to toggle NeoTree focus
 _G.toggle_neotree_focus = function()
-    if vim.bo.filetype == "neo-tree" then
-        vim.cmd("wincmd p")
-    else
-        vim.cmd("Neotree focus")
-    end
+	if vim.bo.filetype == "neo-tree" then
+		vim.cmd("wincmd p")
+	else
+		vim.cmd("Neotree focus")
+	end
 end
 
 -- Additional setup for NeoTree for copying paths
 require('neo-tree').setup {
-  window = {
-    mappings = {
-      ['Y'] = function(state)
-        local node = state.tree:get_node()
-        local filepath = node:get_id()
-        local filename = node.name
-        local modify = vim.fn.fnamemodify
+	window = {
+		mappings = {
+			['Y'] = function(state)
+				local node = state.tree:get_node()
+				local filepath = node:get_id()
+				local filename = node.name
+				local modify = vim.fn.fnamemodify
 
-        local results = {
-          filepath,
-          modify(filepath, ':.'),
-          modify(filepath, ':~'),
-          filename,
-          modify(filename, ':r'),
-          modify(filename, ':e'),
-        }
+				local results = {
+					filepath,
+					modify(filepath, ':.'),
+					modify(filepath, ':~'),
+					filename,
+					modify(filename, ':r'),
+					modify(filename, ':e'),
+				}
 
-        local i = vim.fn.inputlist({
-          'Choose to copy to clipboard:',
-          '1. Absolute path: ' .. results[1],
-          '2. Path relative to CWD: ' .. results[2],
-          '3. Path relative to HOME: ' .. results[3],
-          '4. Filename: ' .. results[4],
-          '5. Filename without extension: ' .. results[5],
-          '6. Extension of the filename: ' .. results[6],
-        })
+				local i = vim.fn.inputlist({
+					'Choose to copy to clipboard:',
+					'1. Absolute path: ' .. results[1],
+					'2. Path relative to CWD: ' .. results[2],
+					'3. Path relative to HOME: ' .. results[3],
+					'4. Filename: ' .. results[4],
+					'5. Filename without extension: ' .. results[5],
+					'6. Extension of the filename: ' .. results[6],
+				})
 
-        if i > 0 then
-          local result = results[i]
-          if not result then return print('Invalid choice: ' .. i) end
-          -- Use the "+ register for the system clipboard
-          vim.fn.setreg('+', result)
-          vim.notify('Copied: ' .. result)
-        end
-      end
-    }
-  }
+				if i > 0 then
+					local result = results[i]
+					if not result then return print('Invalid choice: ' .. i) end
+					-- Use the "+ register for the system clipboard
+					vim.fn.setreg('+', result)
+					vim.notify('Copied: ' .. result)
+				end
+			end
+		}
+	}
 }
 
 -- mappings
