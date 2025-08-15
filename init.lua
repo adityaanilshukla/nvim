@@ -60,7 +60,7 @@ local capabilities = require("blink.cmp").get_lsp_capabilities()
 
 local lspconfig = require("lspconfig")
 local servers = {
-	"lua_ls", "ts_ls", "pyright", "clangd", "bashls", "jdtls",
+	"lua_ls", "ts_ls", "pyright", "clangd", "bashls", "jdtls", "ltex",
 }
 
 for _, server in ipairs(servers) do
@@ -258,3 +258,5 @@ vim.o.showtabline = 2
 vim.opt.termguicolors = true
 vim.o.signcolumn = "yes"
 vim.o.winborder = "rounded"
+vim.opt.spell = true
+vim.opt.spelllang = { 'en_us' }
