@@ -1,9 +1,12 @@
 -- plugins, we load these first before everything else
 vim.pack.add({
-	-- colorscheme plugins
+	-- colorscheme and appearance plugins
 	"https://github.com/vague2k/vague.nvim.git",
 	"https://github.com/rebelot/kanagawa.nvim.git",
 	"https://github.com/EdenEast/nightfox.nvim.git",
+	"https://github.com/nvim-lualine/lualine.nvim.git",
+	"https://github.com/nvim-tree/nvim-web-devicons.git",
+
 	-- telescope and dependency plugins
 	"https://github.com/nvim-lua/plenary.nvim.git",
 	"https://github.com/nvim-telescope/telescope.nvim.git",
@@ -17,9 +20,6 @@ vim.pack.add({
 
 	-- floating terminal
 	"https://github.com/akinsho/toggleterm.nvim.git",
-
-	-- icons
-	"https://github.com/nvim-tree/nvim-web-devicons.git",
 
 	-- Neotree
 	"https://github.com/nvim-neo-tree/neo-tree.nvim.git",
@@ -53,6 +53,7 @@ local Terminal = require('toggleterm.terminal').Terminal
 
 require 'nvim-web-devicons'.setup {}
 require("neo-tree").setup()
+require('lualine').setup()
 
 require("blink.cmp").setup({ fuzzy = { implementation = "lua", } })
 local capabilities = require("blink.cmp").get_lsp_capabilities()
@@ -246,7 +247,7 @@ vim.opt.swapfile = false
 vim.cmd("hi statusline guibg=NONE guifg=NONE")
 vim.cmd("hi statuslineNC guibg=NONE guifg=NONE")
 vim.opt.showmode = false -- hides -- INSERT --
-vim.o.laststatus = 0
+-- vim.o.laststatus = 0
 vim.opt.backup = false
 vim.opt.writebackup = false
 vim.opt.undofile = false
