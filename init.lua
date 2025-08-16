@@ -182,6 +182,11 @@ vim.keymap.set('n', '<leader>x', ':qa<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('v', '<leader>/', '<esc><cmd>lua require("Comment.api").toggle.linewise(vim.fn.visualmode())<CR>',
 	{ noremap = true, silent = true, desc = "Toggle comment for selection" })
 vim.keymap.set('n', '<leader>lf', vim.lsp.buf.format, { noremap = true, silent = true })
+-- Use <leader>s to trigger spelling suggestions
+vim.keymap.set("n", "sc", "z=", { noremap = true, silent = true })
+
+-- Or, even shorter: use `gs`
+vim.keymap.set("n", "gs", "z=", { noremap = true, silent = true })
 
 -- splits
 vim.keymap.set('n', '|', ':vs<CR>', { noremap = true, desc = "Vertical Split" })
@@ -258,5 +263,5 @@ vim.o.showtabline = 2
 vim.opt.termguicolors = true
 vim.o.signcolumn = "yes"
 vim.o.winborder = "rounded"
-vim.opt.spell = true
 vim.opt.spelllang = { 'en_us' }
+vim.opt.spell = true
