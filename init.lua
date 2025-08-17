@@ -6,6 +6,7 @@ vim.pack.add({
 	"https://github.com/EdenEast/nightfox.nvim.git",
 	"https://github.com/nvim-lualine/lualine.nvim.git",
 	"https://github.com/nvim-tree/nvim-web-devicons.git",
+	"https://github.com/lukas-reineke/indent-blankline.nvim.git",
 
 	-- telescope and dependency plugins
 	"https://github.com/nvim-lua/plenary.nvim.git",
@@ -32,6 +33,7 @@ vim.pack.add({
 	"https://github.com/neovim/nvim-lspconfig.git",
 	"https://github.com/numToStr/Comment.nvim.git",
 	"https://github.com/Saghen/blink.cmp.git",
+	"https://github.com/MeanderingProgrammer/render-markdown.nvim.git",
 
 })
 
@@ -54,6 +56,8 @@ local Terminal = require('toggleterm.terminal').Terminal
 require 'nvim-web-devicons'.setup {}
 require("neo-tree").setup()
 require('lualine').setup()
+require("ibl").setup()
+require('render-markdown').enable()
 
 require("blink.cmp").setup({ fuzzy = { implementation = "lua", } })
 local capabilities = require("blink.cmp").get_lsp_capabilities()
