@@ -7,6 +7,7 @@ vim.pack.add({
 	"https://github.com/nvim-lualine/lualine.nvim.git",
 	"https://github.com/nvim-tree/nvim-web-devicons.git",
 	"https://github.com/lukas-reineke/indent-blankline.nvim.git",
+	"https://github.com/folke/which-key.nvim.git",
 
 	-- telescope and dependency plugins
 	"https://github.com/nvim-lua/plenary.nvim.git",
@@ -58,6 +59,8 @@ require("neo-tree").setup()
 require('lualine').setup()
 require("ibl").setup()
 require('render-markdown').enable()
+require("which-key")
+require("which-key").setup()
 
 require("blink.cmp").setup({ fuzzy = { implementation = "lua", } })
 local capabilities = require("blink.cmp").get_lsp_capabilities()
