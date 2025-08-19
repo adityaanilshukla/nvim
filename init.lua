@@ -35,7 +35,9 @@ vim.pack.add({
 	"https://github.com/numToStr/Comment.nvim.git",
 	"https://github.com/Saghen/blink.cmp.git",
 	"https://github.com/MeanderingProgrammer/render-markdown.nvim.git",
-
+	"https://github.com/mfussenegger/nvim-dap.git",
+	"https://github.com/rcarriga/nvim-dap-ui.git",
+	"https://github.com/nvim-neotest/nvim-nio.git",
 })
 
 -- requirements
@@ -61,6 +63,32 @@ require("ibl").setup()
 require('render-markdown').enable()
 require("which-key")
 require("which-key").setup()
+
+-- dap stuff
+local ok_dap, dap = pcall(require, "dap")
+local ok_dapui, dapui = pcall(require, "dapui")
+
+if ok_dap and ok_dapui then
+  dapui.setup()  -- important
+
+  -- Open UI when a session starts; close when it ends
+  dap.listeners.after.event_initialized["dapui_config"] = function()
+    dapui.open()
+  end
+  dap.listeners.before.event_terminated["dapui_config"] = function()
+    dapui.close()
+  end
+  dap.listeners.before.event_exited["dapui_config"] = function()
+    dapui.close()
+  end
+else
+  if not ok_dap then
+    vim.notify("nvim-dap is not installed/loaded", vim.log.levels.ERROR)
+  end
+  if not ok_dapui then
+    vim.notify("nvim-dap-ui is not installed/loaded", vim.log.levels.ERROR)
+  end
+end
 
 require("blink.cmp").setup({ fuzzy = { implementation = "lua", } })
 local capabilities = require("blink.cmp").get_lsp_capabilities()
@@ -178,6 +206,20 @@ require('neo-tree').setup {
 	}
 }
 
+--dapui functions
+dap.listeners.before.attach.dapui_config = function()
+  dapui.open()
+end
+dap.listeners.before.launch.dapui_config = function()
+  dapui.open()
+end
+dap.listeners.before.event_terminated.dapui_config = function()
+  dapui.close()
+end
+dap.listeners.before.event_exited.dapui_config = function()
+  dapui.close()
+end
+
 -- mappings
 vim.g.mapleader = " "
 
@@ -244,6 +286,15 @@ vim.keymap.set('n', '<F7>', '<cmd>ToggleTerm direction=float<CR>', { noremap = t
 -- lazygit
 vim.keymap.set('n', '<leader>gg', _lazygit_toggle, { noremap = true, silent = true, desc = 'Toggle LazyGit' })
 
+-- nvim-dap
+vim.keymap.set('n', '<F5>', function() dap.continue() end)
+vim.keymap.set('n', '<F10>', function() dap.step_over() end)
+vim.keymap.set('n', '<F11>', function() dap.step_into() end)
+vim.keymap.set('n', '<F12>', function() dap.step_out() end)
+vim.keymap.set('n', '<Leader>b', function() dap.toggle_breakpoint() end)
+vim.keymap.set('n', '<Leader>B', function() dap.set_breakpoint() end)
+vim.keymap.set('n', '<Leader>dr', function() dap.repl.open() end)
+vim.keymap.set('n', '<Leader>dl', function() dap.run_last() end)
 
 -- options
 vim.cmd("colorscheme carbonfox")
