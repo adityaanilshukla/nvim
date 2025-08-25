@@ -1,0 +1,5 @@
+-- Put your custom autocmds here (kept optional in init.lua)
+-- Example:
+-- vim.api.nvim_create_autocmd("TextYankPost", {
+--   callback = function() vim.highlight.on_yank() end,
+-- })
