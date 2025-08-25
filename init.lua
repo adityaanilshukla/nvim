@@ -1,6 +1,7 @@
 require("user.plugins") -- install/declare plugins early
 require("user.options")
 require("user.keymaps")
+require("user.diagnostics")
 
 -- plugin configs (safe to split; each file does its own pcall)
 require("user.plugin_config.theme")
