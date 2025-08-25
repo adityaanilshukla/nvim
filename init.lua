@@ -38,6 +38,7 @@ vim.pack.add({
 	"https://github.com/mfussenegger/nvim-dap.git",
 	"https://github.com/rcarriga/nvim-dap-ui.git",
 	"https://github.com/nvim-neotest/nvim-nio.git",
+	"https://github.com/mfussenegger/nvim-dap-python.git",
 })
 
 -- requirements
@@ -90,6 +91,23 @@ else
   end
 end
 
+-- dap-python setup (put this AFTER the dap + dapui setup)
+local ok_dap_python, dap_python = pcall(require, "dap-python")
+if ok_dap_python then
+  local python_path = function()
+    local cwd = vim.fn.getcwd()
+    if vim.fn.executable(cwd .. "/venv/bin/python") == 1 then
+      return cwd .. "/venv/bin/python"
+    elseif vim.fn.executable(cwd .. "/.venv/bin/python") == 1 then
+      return cwd .. "/.venv/bin/python"
+    else
+      return vim.fn.exepath("python3")
+    end
+  end
+
+  dap_python.setup(python_path())
+end
+
 require("blink.cmp").setup({ fuzzy = { implementation = "lua", } })
 local capabilities = require("blink.cmp").get_lsp_capabilities()
 
@@ -119,7 +137,7 @@ end
 -- loop through all the language servers and set them up
 local lsp = require("lspconfig")
 local servers = {
-	"jdtls", "clangd", "ts_ls", "pyright", "bashls", "lua_ls",
+	"jdtls", "clangd", "ts_ls", "pyright", "bashls", "lua_ls", "marksman"
 }
 
 for _, srv in ipairs(servers) do
@@ -287,14 +305,14 @@ vim.keymap.set('n', '<F7>', '<cmd>ToggleTerm direction=float<CR>', { noremap = t
 vim.keymap.set('n', '<leader>gg', _lazygit_toggle, { noremap = true, silent = true, desc = 'Toggle LazyGit' })
 
 -- nvim-dap
-vim.keymap.set('n', '<F5>', function() dap.continue() end)
-vim.keymap.set('n', '<F10>', function() dap.step_over() end)
-vim.keymap.set('n', '<F11>', function() dap.step_into() end)
-vim.keymap.set('n', '<F12>', function() dap.step_out() end)
-vim.keymap.set('n', '<Leader>b', function() dap.toggle_breakpoint() end)
-vim.keymap.set('n', '<Leader>B', function() dap.set_breakpoint() end)
-vim.keymap.set('n', '<Leader>dr', function() dap.repl.open() end)
-vim.keymap.set('n', '<Leader>dl', function() dap.run_last() end)
+vim.keymap.set('n', '<F5>', function() dap.continue() end, { desc = "DAP: Continue / Start Debugging" })
+vim.keymap.set('n', '<F10>', function() dap.step_over() end, { desc = "DAP: Step Over" })
+vim.keymap.set('n', '<F11>', function() dap.step_into() end, { desc = "DAP: Step Into" })
+vim.keymap.set('n', '<F12>', function() dap.step_out() end, { desc = "DAP: Step Out" })
+vim.keymap.set('n', '<Leader>b', function() dap.toggle_breakpoint() end, { desc = "DAP: Toggle Breakpoint" })
+vim.keymap.set('n', '<Leader>B', function() dap.set_breakpoint() end, { desc = "DAP: Set Conditional Breakpoint" })
+vim.keymap.set('n', '<Leader>dr', function() dap.repl.open() end, { desc = "DAP: Open REPL" })
+vim.keymap.set('n', '<Leader>dl', function() dap.run_last() end, { desc = "DAP: Run Last Debug Session" })
 
 -- options
 vim.cmd("colorscheme carbonfox")
@@ -310,13 +328,12 @@ vim.opt.swapfile = false
 vim.cmd("hi statusline guibg=NONE guifg=NONE")
 vim.cmd("hi statuslineNC guibg=NONE guifg=NONE")
 vim.opt.showmode = false -- hides -- INSERT --
--- vim.o.laststatus = 0
 vim.opt.backup = false
 vim.opt.writebackup = false
 vim.opt.undofile = false
 vim.opt.foldcolumn = "0"
 vim.opt.showcmd = false
-vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
+vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,localoptions,"
 vim.o.showtabline = 2
 vim.opt.termguicolors = true
 vim.o.signcolumn = "yes"
