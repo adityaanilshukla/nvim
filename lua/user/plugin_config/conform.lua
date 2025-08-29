@@ -33,6 +33,7 @@ conform.setup({
 		scss = { "prettier" },
 		c = { "clang_format" },
 		cpp = { "clang_format" },
+		tex = { "latexindent" },
 	},
 	formatters = {
 		shfmt = { prepend_args = { "-i", "2", "-ci" } },

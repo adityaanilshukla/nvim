@@ -131,7 +131,7 @@ sudo pacman -S --needed git base-devel nodejs npm python jre-openjdk
 ```bash
 sudo pacman -S --needed lua-language-server typescript-language-server pyright clang bash-language-server marksman
 yay -S jdtls
-yay -S ltex-ls-bin   #grammar checker for Markdown/LaTeX
+yay -S ltex-ls-plus-bin   #grammar checker for Markdown/LaTeX
 ```
 
 ### Formatters
@@ -161,7 +161,7 @@ sudo pacman -S --needed python-debugpy lldb gdb
 ### LSP
 
 ```bash
-which lua-language-server clangd pyright typescript-language-server bash-language-server jdtls marksman ltex-ls
+which lua-language-server clangd pyright typescript-language-server bash-language-server jdtls marksman ltex-ls-plus-bin
 ```
 
 ### Formatters
