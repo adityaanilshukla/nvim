@@ -19,6 +19,8 @@ require("user.plugin_config.comment")
 require("user.plugin_config.render-markdown")
 require("user.plugin_config.conform")
 require("user.plugin_config.nvim-lint")
+require("user.plugin_config.vimtex")
+require("user.plugin_config.utilsnips")
 
 -- features
 require("user.lsp") -- loads lsp/init.lua

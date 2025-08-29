@@ -50,7 +50,28 @@ Notable configs:
 - **auto-session.lua** → auto session save/restore
 - **render-markdown.lua** → renders Markdown previews inline
 
+### Python support for Neovim
+
+Some plugins (e.g. UltiSnips) depend on Neovim’s Python 3 provider. Without it, you’ll see errors like `E319: No "python3" provider found`.
+
+```sh
+sudo pacman -S python-pynvim
+yay -S neovim-remote # needed for inverse search (nvr)
+
+```
+
 ---
+
+### LaTeX suport
+
+```sh
+sudo pacman -S --needed texlive-bin texlive-basic texlive-latex texlive-latexrecommended \
+  texlive-latexextra texlive-fontsextra texlive-bibtexextra texlive-pictures biber
+
+sudo pacman -S --needed texlive-binextra
+
+sudo pacman -S tectonic # minimal alt
+```
 
 ## LSP
 

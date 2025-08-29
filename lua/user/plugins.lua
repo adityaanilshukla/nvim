@@ -41,4 +41,6 @@ vim.pack.add({
 	"https://github.com/mfussenegger/nvim-dap-python.git",
 	"https://github.com/stevearc/conform.nvim.git",
 	"https://github.com/mfussenegger/nvim-lint.git",
+	"https://github.com/lervag/vimtex.git",
+	"https://github.com/SirVer/ultisnips.git",
 })
