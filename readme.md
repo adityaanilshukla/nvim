@@ -68,9 +68,11 @@ yay -S neovim-remote # needed for inverse search (nvr)
 sudo pacman -S --needed texlive-bin texlive-basic texlive-latex texlive-latexrecommended \
   texlive-latexextra texlive-fontsextra texlive-bibtexextra texlive-pictures biber
 
-sudo pacman -S --needed texlive-binextra
+sudo pacman -S --needed texlive-binextra python-weasyprint
 
-sudo pacman -S tectonic # minimal alt
+sudo pacman -S --needed tectonic # minimal alt
+
+yay -S --needed pandoc-bin
 ```
 
 ## LSP

@@ -22,6 +22,7 @@ conform.setup({
 		javascript = { "prettier" },
 		typescript = { "prettier" },
 		javascriptreact = { "prettier" },
+		java = { "google-java-format" },
 		typescriptreact = { "prettier" },
 		json = { "prettier" },
 		jsonc = { "prettier" },
