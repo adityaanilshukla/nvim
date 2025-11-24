@@ -148,6 +148,7 @@ sudo npm i -g prettier
 ```bash
 sudo pacman -S --needed luacheck ruff shellcheck yamllint
 sudo npm i -g eslint eslint_d
+sudo pacman -S checkstyle
 ```
 
 ### DAP
