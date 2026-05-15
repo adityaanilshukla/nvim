@@ -21,6 +21,7 @@ require("user.plugin_config.conform")
 require("user.plugin_config.nvim-lint")
 require("user.plugin_config.vimtex")
 require("user.plugin_config.utilsnips")
+require("user.plugin_config.leetcode")
 
 -- features
 require("user.lsp") -- loads lsp/init.lua
