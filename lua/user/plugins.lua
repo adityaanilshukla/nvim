@@ -9,10 +9,10 @@ vim.pack.add({
 	"https://github.com/lukas-reineke/indent-blankline.nvim.git",
 	"https://github.com/folke/which-key.nvim.git",
 
-	-- telescope + deps + treesitter
+	-- telescope + deps
 	"https://github.com/nvim-lua/plenary.nvim.git",
 	"https://github.com/nvim-telescope/telescope.nvim.git",
-	"https://github.com/nvim-treesitter/nvim-treesitter.git",
+	{ src = "https://github.com/nvim-treesitter/nvim-treesitter.git", version = "main" },
 
 	-- session
 	"https://github.com/rmagatti/auto-session.git",
