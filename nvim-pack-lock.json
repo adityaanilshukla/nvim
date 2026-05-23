@@ -33,7 +33,7 @@
       "src": "https://github.com/nvim-lualine/lualine.nvim.git"
     },
     "neo-tree.nvim": {
-      "rev": "f1deac7ecec88c28a250d890ba7bb35843e69cbd",
+      "rev": "4d748ef6953ba0c3a6623dc0a775a5f5989aba70",
       "src": "https://github.com/nvim-neo-tree/neo-tree.nvim.git"
     },
     "nightfox.nvim": {
