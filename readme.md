@@ -56,7 +56,7 @@ Some plugins (e.g. UltiSnips) depend on Neovim’s Python 3 provider. Without it
 
 ```sh
 sudo pacman -S python-pynvim
-yay -S neovim-remote # needed for inverse search (nvr)
+paru -S neovim-remote # needed for inverse search (nvr)
 
 ```
 
@@ -72,7 +72,7 @@ sudo pacman -S --needed texlive-binextra python-weasyprint
 
 sudo pacman -S --needed tectonic # minimal alt
 
-yay -S --needed pandoc-bin
+paru -S --needed pandoc-bin
 ```
 
 ## LSP
@@ -119,7 +119,7 @@ Neovim automatically loads these when editing that filetype.
 
 ## System Setup (LSP + Linters + Formatters + DAP)
 
-Everything installed via **pacman** (official repos) + **yay** (AUR).  
+Everything installed via **pacman** (official repos) + **paru** (AUR).  
 This is the minimal checklist to make everything fully work.
 
 ### Core Runtimes
@@ -132,8 +132,8 @@ sudo pacman -S --needed git base-devel nodejs npm python jre-openjdk
 
 ```bash
 sudo pacman -S --needed lua-language-server typescript-language-server pyright clang bash-language-server marksman
-yay -S jdtls
-yay -S ltex-ls-plus-bin   #grammar checker for Markdown/LaTeX
+paru -S jdtls
+paru -S ltex-ls-plus-bin   #grammar checker for Markdown/LaTeX
 ```
 
 ### Formatters
