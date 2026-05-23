@@ -43,4 +43,7 @@ vim.pack.add({
 	"https://github.com/mfussenegger/nvim-lint.git",
 	"https://github.com/lervag/vimtex.git",
 	"https://github.com/SirVer/ultisnips.git",
+
+	-- Practice Leetcode
+	"https://github.com/kawre/leetcode.nvim",
 })

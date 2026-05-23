@@ -4,6 +4,7 @@ if not ok then return end
 nts.setup()
 
 -- Parsers to keep installed. Edit this list and run :TSUpdate (or restart) to sync.
+-- (html is needed by leetcode.nvim to render question descriptions.)
 local parsers = {
   "bash", "c", "cpp", "go", "html", "java", "javascript", "json",
   "lua", "markdown", "markdown_inline", "python", "query", "regex",
