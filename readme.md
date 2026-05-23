@@ -75,6 +75,12 @@ sudo pacman -S --needed tectonic # minimal alt
 paru -S --needed pandoc-bin
 ```
 
+### Treesitter
+
+`nvim-treesitter` runs on the `main` branch; the legacy `master` was archived in May 2025 and breaks on recent Neovim. On a fresh machine, the first launch downloads and compiles parsers from source — needs a C compiler (already covered by `base-devel` in Core Runtimes) and network access. Startup blocks once with a notification while parsers install; subsequent launches are no-ops.
+
+Edit the `parsers` list in `user/plugin_config/treesitter.lua` to add or remove languages, then restart or run `:TSUpdate`.
+
 ## LSP
 
 All language server config is modular under `user/lsp/`:
