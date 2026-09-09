@@ -33,6 +33,19 @@ vim.pack.add({
 	-- LSP / editing / debug
 	"https://github.com/neovim/nvim-lspconfig.git",
 	"https://github.com/numToStr/Comment.nvim.git",
+	-- blink.lib must be listed, and listed before blink.cmp. blink.cmp v2 split
+	-- its shared code out into this package and hard-requires it: without it,
+	-- every launch printed "loop or previous error loading module 'blink.cmp'",
+	-- which is Lua reporting a cached failure rather than the real one. The
+	-- actual message, only visible by requiring it in a clean nvim, was
+	-- 'blink.cmp v2 requires "saghen/blink.lib" installed via your package
+	-- manager'.
+	--
+	-- It was already cloned into pack/core/opt and already in
+	-- nvim-pack-lock.json; it was missing only from here. opt packages are not
+	-- on the runtimepath until something adds them, so being on disk counted
+	-- for nothing.
+	"https://github.com/saghen/blink.lib",
 	"https://github.com/Saghen/blink.cmp.git",
 	"https://github.com/MeanderingProgrammer/render-markdown.nvim.git",
 	"https://github.com/mfussenegger/nvim-dap.git",
