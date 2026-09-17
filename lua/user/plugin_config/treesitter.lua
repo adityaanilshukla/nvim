@@ -23,10 +23,24 @@ end
 
 -- Enable highlighting (and indent, where supported) per filetype. pcall handles
 -- buffers whose parser is still installing or whose filetype has none.
+--
+-- The indentexpr is only set where nothing else claimed one. nvim-treesitter's
+-- indentation is experimental by its own documentation, and where Neovim ships
+-- a hand-written indent script the shipped one is better. Python is the case
+-- that proved it: after a `return`, treesitter indents the next line to column
+-- 0 instead of dedenting one level to the enclosing block, so leaving an `if`
+-- body threw the cursor to the start of the line.
+--
+--   after "        return False"      stock nvim: 8      treesitter: 0
+--
+-- This autocmd is registered after the runtime's own FileType autocmds, so by
+-- the time it runs a shipped indent script has already set indentexpr and the
+-- check below sees it. Filetypes with no indent script still get treesitter,
+-- which is the half of this that was worth having.
 vim.api.nvim_create_autocmd("FileType", {
   callback = function(args)
-    if pcall(vim.treesitter.start, args.buf) then
-      vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
-    end
+    if not pcall(vim.treesitter.start, args.buf) then return end
+    if vim.bo[args.buf].indentexpr ~= "" then return end
+    vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
   end,
 })
