@@ -64,6 +64,58 @@ Edit the `parsers` list in `user/plugin_config/treesitter.lua` to add or remove 
 
 ---
 
+## LeetCode — staying signed in
+
+`leetcode.nvim` keeps its session in `~/.cache/nvim/leetcode/cookie` and has no
+refresh of its own: the first time LeetCode rejects that session the plugin
+deletes the file and puts its `Enter cookie` prompt back in your face.
+
+`scripts/leetcode-cookie` removes the paste step by copying the live session out
+of a browser's cookie jar before the plugin starts. It runs on `:Leet`, on
+`nvim leetcode.nvim`, and on demand via `:LeetSync`.
+
+```bash
+brew install uv     # the script is a uv inline-metadata script; nothing else to install
+```
+
+**It reads Firefox, not Brave, and that is deliberate.** Chromium-family
+browsers encrypt cookie values against a Keychain item (`Brave Safe Storage`),
+and every read of it raises a password dialog. The *Always Allow* button is
+supposed to end that, but it writes an ACL entry keyed to the requesting binary,
+and uv's interpreter — `~/.cache/uv/environments-v2/leetcode-cookie-<hash>/bin/python`
+— is unsigned, so the grant never matches and the prompt comes back every time.
+Unattended that fails badly: Neovim blocks for its whole timeout, the dialog sits
+somewhere you are not looking, and because `uv run` execs python as a
+*grandchild*, killing the process Neovim knows about leaves that python alive and
+still holding the request. They accumulate.
+
+Firefox stores `cookies.sqlite` in plaintext, so the same read is just a file
+read — no dialog, no timeout, ~0.3s.
+
+So: **log in to leetcode.com in Firefox once.** The catch is that only the
+browser that loads leetcode.com renews the session — it is a sliding window of
+roughly a fortnight — so if Firefox is not your daily driver, open leetcode.com
+there occasionally.
+
+You do not have to track that yourself. Every sync echoes the days remaining on
+the command line:
+
+```
+LeetCode: 14 days left
+```
+
+Under four days it turns into a `WarningMsg` naming the browser to go and load,
+and also raises a `vim.notify` so it sticks around in `:messages`:
+
+```
+LeetCode: 3 days left -- load leetcode.com in firefox
+```
+
+Read a different jar by setting `LEET_BROWSER` (`brave`, `chrome`, `safari`).
+On macOS, expect the Keychain behaviour above for anything Chromium-based.
+
+---
+
 ## Python provider
 
 Some plugins (e.g. UltiSnips) need Neovim's Python 3 provider:

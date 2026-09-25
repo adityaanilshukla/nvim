@@ -1,0 +1,130 @@
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.11,<3.13"
+# dependencies = ["rookiepy"]
+# ///
+#
+# The upper bound is not cosmetic. rookiepy is a compiled Rust extension and its
+# wheels stop at cp312, so an unbounded floor lets uv pick whatever python is
+# newest on the machine (3.14 on this one), find no wheel, fall back to building
+# the sdist and die in that sdist's malformed pyproject.toml. Pinned below 3.13,
+# uv resolves to a real wheel, downloading a managed 3.12 if the system has none.
+"""Copy the live leetcode.com session out of the browser's cookie jar into the
+file leetcode.nvim reads.
+
+The plugin has no refresh of its own. It stores whatever you typed into its
+`Enter cookie` prompt, and the first time LeetCode rejects that session
+api/auth.lua calls delete_cookie(), wipes the file, and makes you paste a new
+one by hand.
+
+The browser is already holding a good session, though. LEETCODE_SESSION is a
+sliding window -- roughly a fortnight, pushed forward server-side every time you
+load leetcode.com -- so a browser you actually use never goes stale. Making that
+jar the source of truth and re-copying before each nvim session is what keeps
+the plugin signed in indefinitely: there is nothing left to paste as long as you
+stay logged in somewhere.
+
+Usage: leetcode-cookie <path-to-cookie-file>
+Set LEET_BROWSER to read some other jar (brave, chrome, safari...).
+
+Firefox is the default for one reason: it is the only jar here that opens
+without the macOS Keychain. Chromium-family browsers encrypt their cookie
+values with a key kept under "<Browser> Safe Storage", and reaching it raises a
+password dialog -- once per read, because the "Always Allow" button writes an
+ACL entry that does not match uv's unsigned interpreter. Unattended, those
+dialogs simply queue: nvim blocks, the python behind it never exits, and they
+pile up. Firefox keeps cookies.sqlite in plaintext, so this just reads a file.
+
+The tradeoff is that the session only slides forward in the browser that loads
+leetcode.com. If Firefox is not your daily driver, open leetcode.com there when
+the warning below starts appearing.
+"""
+
+import os
+import sys
+import tempfile
+import time
+from pathlib import Path
+
+import rookiepy
+
+# Days of remaining session below which the nudge fires.
+STALE_DAYS = 4
+
+browser = os.environ.get("LEET_BROWSER", "firefox")
+out = Path(sys.argv[1]).expanduser()
+
+reader = getattr(rookiepy, browser, None)
+if reader is None:
+    sys.exit(f"leetcode-cookie: rookiepy has no reader for browser {browser!r}")
+
+# rookiepy's domain filter matches subdomains too, so re-filter: a cookie set on
+# a host like assets.leetcode.com is not the session we are after.
+jar = {
+    c["name"]: c
+    for c in reader(["leetcode.com"])
+    if c["domain"].lstrip(".") == "leetcode.com"
+}
+
+csrf, sess = jar.get("csrftoken"), jar.get("LEETCODE_SESSION")
+if not (csrf and sess):
+    sys.exit(f"leetcode-cookie: not logged in to leetcode.com in {browser}")
+
+# Expiry comes off the cookie attribute, not the token body. LEETCODE_SESSION
+# looks like a JWT and decodes like one, but its payload carries no `exp` claim
+# -- only a `refreshed_at` stamp -- so reading the JWT tells you when the window
+# last moved, never when it closes. The jar's own expires field is the real one.
+# rookiepy does not normalise this field across its backends: Chromium jars come
+# back in seconds, Firefox's in milliseconds (a fortnight out reads as 1.79e12,
+# which sails past a seconds-based sanity check and reported "good for 20714383
+# more days"). Nothing in the record says which unit it is, so judge by
+# magnitude -- any real expiry in seconds is under 4e9 well past this century,
+# while a millisecond stamp is three orders above that.
+expires = sess.get("expires") or 0
+if expires > 1e11:
+    expires /= 1000
+
+left = expires - time.time() if expires else None
+
+# Bail rather than write a dead cookie. The plugin's reaction to one is to
+# delete the file and prompt, which reads as a plugin bug; saying plainly that
+# the *browser* is logged out points at the one thing that actually fixes it.
+if left is not None and left <= 0:
+    sys.exit(
+        f"leetcode-cookie: the leetcode.com session in {browser} has itself "
+        f"expired. Open leetcode.com there and sign in again."
+    )
+
+days = None if left is None else left / 86400
+
+# The window is about a fortnight and only LeetCode itself renews it, so a
+# browser you have stopped opening goes quietly dead. Start nagging with a few
+# days in hand: loading leetcode.com once is the whole fix, but only while the
+# session is still alive to be slid forward.
+if days is not None and days < STALE_DAYS:
+    print(
+        f"leetcode-cookie: the leetcode.com session in {browser} runs out in "
+        f"{days:.1f} days. Open leetcode.com there to push it forward.",
+        file=sys.stderr,
+    )
+
+# The lua side reads the day count back out of this line to put a countdown on
+# the nvim command line, so keep the "<n> days left" shape if you reword it.
+print(
+    "leetcode-cookie: session from %s%s"
+    % (browser, "" if days is None else f", {days:.1f} days left")
+)
+
+new = f"csrftoken={csrf['value']}; LEETCODE_SESSION={sess['value']}"
+
+# Writing an identical cookie would still bump the file's mtime, and the plugin
+# keys its in-memory cookie cache on exactly that (cache/cookie.lua, hist[mtime]),
+# so a no-op write throws away a warm entry for nothing. Leave the file alone.
+if out.exists() and out.read_text().strip() == new:
+    sys.exit(0)
+
+out.parent.mkdir(parents=True, exist_ok=True)
+fd, tmp = tempfile.mkstemp(dir=out.parent)  # mkstemp creates the file 0600
+with os.fdopen(fd, "w") as f:
+    f.write(new)
+os.replace(tmp, out)  # atomic: nvim can never read a half-written cookie
