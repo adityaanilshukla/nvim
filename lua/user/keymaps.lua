@@ -45,8 +45,10 @@ vim.keymap.set("n", "<leader>C", "<cmd>bdelete!<CR>", { noremap = true, silent =
 vim.keymap.set("n", "]b", "<cmd>bnext<CR>", { noremap = true, silent = true, desc = "Next buffer" })
 vim.keymap.set("n", "[b", "<cmd>bprevious<CR>", { noremap = true, silent = true, desc = "Previous buffer" })
 
--- center buffer
-vim.keymap.set("n", "<leader>cb", "<cmd>NoNeckPain<CR>", { noremap = true, silent = true, desc = "Center buffer" })
+-- center buffer. <leader>z rather than <leader>cb: <leader>c is close-buffer,
+-- so any <leader>c prefix made that key wait out timeoutlen on every press to
+-- see whether a b was coming.
+vim.keymap.set("n", "<leader>z", "<cmd>NoNeckPain<CR>", { noremap = true, silent = true, desc = "Center buffer" })
 
 -- file explorer
 vim.keymap.set("n", "<leader>e", "<cmd>Neotree toggle<CR>", { noremap = true, silent = true, desc = "Neo-tree: toggle" })
