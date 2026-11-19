@@ -1,43 +1,5 @@
--- lua/user/diagnostics.lua
--- Inline diagnostics (“ghost text”) + hover popups + toggles
-
--- Keep the letter signs you’re seeing now
-for t, s in pairs({ Error = "E", Warn = "W", Info = "I", Hint = "H" }) do
-	local hl = "DiagnosticSign" .. t
-	vim.fn.sign_define(hl, { text = s, texthl = hl, numhl = "" })
-end
-
--- Format ghost text as: message [CODE] (source)
-local function vt_format(d)
-	local code = d.code or (d.user_data and d.user_data.lsp and d.user_data.lsp.code)
-	if code and d.source then
-		return string.format("%s [%s] (%s)", d.message, code, d.source)
-	elseif code then
-		return string.format("%s [%s]", d.message, code)
-	elseif d.source then
-		return string.format("%s (%s)", d.message, d.source)
-	end
-	return d.message
-end
-
-vim.diagnostic.config({
-	virtual_text = { prefix = "▎", spacing = 1, source = "if_many", format = vt_format },
-	underline = true,
-	signs = true,
-	update_in_insert = false,
-	severity_sort = true,
-	float = { border = "rounded", source = "if_many", focusable = false },
-})
-
--- Cursor-hold popup with the full diagnostic under the cursor
-vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
-	group = vim.api.nvim_create_augroup("DiagFloat", { clear = true }),
-	callback = function()
-		vim.diagnostic.open_float(nil, { scope = "cursor", border = "rounded", focusable = false })
-	end,
-})
-
--- === DIAGNOSTIC TOGGLES (drop-in) ===
+-- Inline diagnostics (ghost text), the cursor-hold popup, and toggles for
+-- both -- plus an inlay-hint toggle at the bottom.
 
 -- Always define letter signs; we'll re-apply when signs are re-enabled
 local function define_diag_signs()
