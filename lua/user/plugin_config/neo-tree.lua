@@ -1,42 +1,46 @@
 local ok, neotree = pcall(require, "neo-tree")
-if not ok then return end
+if not ok then
+	return
+end
 
 neotree.setup({
-  window = {
-    mappings = {
-      -- Y: pick which form of the node's path to put on the clipboard.
-      ['Y'] = function(state)
-        local node = state.tree:get_node()
-        local filepath = node:get_id()
-        local filename = node.name
-        local modify = vim.fn.fnamemodify
+	window = {
+		mappings = {
+			-- Y: pick which form of the node's path to put on the clipboard.
+			["Y"] = function(state)
+				local node = state.tree:get_node()
+				local filepath = node:get_id()
+				local filename = node.name
+				local modify = vim.fn.fnamemodify
 
-        local results = {
-          filepath,
-          modify(filepath, ':.'),
-          modify(filepath, ':~'),
-          filename,
-          modify(filename, ':r'),
-          modify(filename, ':e'),
-        }
+				local results = {
+					filepath,
+					modify(filepath, ":."),
+					modify(filepath, ":~"),
+					filename,
+					modify(filename, ":r"),
+					modify(filename, ":e"),
+				}
 
-        local i = vim.fn.inputlist({
-          'Choose to copy to clipboard:',
-          '1. Absolute path: ' .. results[1],
-          '2. Path relative to CWD: ' .. results[2],
-          '3. Path relative to HOME: ' .. results[3],
-          '4. Filename: ' .. results[4],
-          '5. Filename without extension: ' .. results[5],
-          '6. Extension of the filename: ' .. results[6],
-        })
+				local i = vim.fn.inputlist({
+					"Choose to copy to clipboard:",
+					"1. Absolute path: " .. results[1],
+					"2. Path relative to CWD: " .. results[2],
+					"3. Path relative to HOME: " .. results[3],
+					"4. Filename: " .. results[4],
+					"5. Filename without extension: " .. results[5],
+					"6. Extension of the filename: " .. results[6],
+				})
 
-        if i > 0 then
-          local result = results[i]
-          if not result then return print('Invalid choice: ' .. i) end
-          vim.fn.setreg('+', result)
-          vim.notify('Copied: ' .. result)
-        end
-      end,
-    },
-  },
+				if i > 0 then
+					local result = results[i]
+					if not result then
+						return print("Invalid choice: " .. i)
+					end
+					vim.fn.setreg("+", result)
+					vim.notify("Copied: " .. result)
+				end
+			end,
+		},
+	},
 })

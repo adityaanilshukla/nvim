@@ -1,1 +1,3 @@
-pcall(function() require("Comment").setup() end)
+pcall(function()
+	require("Comment").setup()
+end)

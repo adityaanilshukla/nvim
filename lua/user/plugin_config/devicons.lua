@@ -1,1 +1,3 @@
-pcall(function() require('nvim-web-devicons').setup({}) end)
+pcall(function()
+	require("nvim-web-devicons").setup({})
+end)

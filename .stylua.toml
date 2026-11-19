@@ -1,0 +1,10 @@
+# Pinned rather than left to stylua's defaults so the two machines, and conform's
+# format-on-save, cannot disagree about what this config should look like. These
+# ARE stylua 2.x's current defaults -- written down so a future default change
+# does not silently reformat the whole tree.
+column_width = 120
+line_endings = "Unix"
+indent_type = "Tabs"
+indent_width = 4
+quote_style = "AutoPreferDouble"
+call_parentheses = "Always"

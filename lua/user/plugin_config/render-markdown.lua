@@ -1,1 +1,3 @@
-pcall(function() require('render-markdown').enable() end)
+pcall(function()
+	require("render-markdown").enable()
+end)

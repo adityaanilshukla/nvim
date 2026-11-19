@@ -51,7 +51,12 @@ vim.keymap.set("n", "[b", "<cmd>bprevious<CR>", { noremap = true, silent = true,
 vim.keymap.set("n", "<leader>z", "<cmd>NoNeckPain<CR>", { noremap = true, silent = true, desc = "Center buffer" })
 
 -- file explorer
-vim.keymap.set("n", "<leader>e", "<cmd>Neotree toggle<CR>", { noremap = true, silent = true, desc = "Neo-tree: toggle" })
+vim.keymap.set(
+	"n",
+	"<leader>e",
+	"<cmd>Neotree toggle<CR>",
+	{ noremap = true, silent = true, desc = "Neo-tree: toggle" }
+)
 vim.keymap.set("n", "<leader>o", function()
 	require("user.utils").toggle_neotree_focus()
 end, { noremap = true, silent = true, desc = "Neo-tree: toggle focus" })

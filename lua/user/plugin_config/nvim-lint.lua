@@ -1,20 +1,22 @@
 local ok, lint = pcall(require, "lint")
-if not ok then return end
+if not ok then
+	return
+end
 
 lint.linters_by_ft = {
-	lua        = { "luacheck" }, -- or "selene" if you use it
-	python     = { "ruff" }, -- fast, modern; can replace flake8
-	sh         = { "shellcheck" },
-	bash       = { "shellcheck" },
-	zsh        = { "shellcheck" },
+	lua = { "luacheck" }, -- or "selene" if you use it
+	python = { "ruff" }, -- fast, modern; can replace flake8
+	sh = { "shellcheck" },
+	bash = { "shellcheck" },
+	zsh = { "shellcheck" },
 	javascript = { "eslint_d" }, -- use eslint_d for speed
 	typescript = { "eslint_d" },
-	json       = { "eslint_d" }, -- if you have JSON rules; else remove
-	yaml       = { "yamllint" },
-	markdown   = {},      -- usually handled by ltex LSP if enabled
-	c          = { "clangtidy" },
-	cpp        = { "clangtidy" },
-	java       = { "checkstyle" },
+	json = { "eslint_d" }, -- if you have JSON rules; else remove
+	yaml = { "yamllint" },
+	markdown = {}, -- usually handled by ltex LSP if enabled
+	c = { "clangtidy" },
+	cpp = { "clangtidy" },
+	java = { "checkstyle" },
 }
 
 -- Homebrew's llvm is keg-only, so clang-tidy isn't on PATH on macOS.
@@ -52,5 +54,6 @@ vim.api.nvim_create_autocmd({ "BufWritePost", "InsertLeave", "BufEnter" }, {
 })
 
 -- Optional keymap for on-demand lint
-vim.keymap.set("n", "<leader>L", function() require("lint").try_lint() end,
-	{ desc = "nvim-lint: Lint buffer" })
+vim.keymap.set("n", "<leader>L", function()
+	require("lint").try_lint()
+end, { desc = "nvim-lint: Lint buffer" })
