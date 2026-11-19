@@ -13,18 +13,6 @@ vim.api.nvim_set_keymap(
 	{ noremap = true, silent = true, desc = "Toggle comment for selection" }
 )
 
--- LSP format
--- vim.keymap.set('n', '<leader>F', function()
--- 	require("conform").format({ async = true, lsp_fallback = true })
--- end, { desc = "Conform: Format buffer" })
-
--- Make both <leader>F and <leader>lf use Conform with LSP fallback
-local fmt = function()
-	require("conform").format({ async = true, lsp_fallback = true })
-end
-vim.keymap.set("n", "<leader>F", fmt, { desc = "Conform: Format buffer" })
-vim.keymap.set("n", "<leader>lf", fmt, { desc = "Conform: Format buffer" }) -- override old LSP mapping
-
 -- spelling suggestions
 vim.keymap.set("n", "sc", "z=", { noremap = true, silent = true, desc = "Spell suggestions" })
 vim.keymap.set("n", "gs", "z=", { noremap = true, silent = true, desc = "Spell suggestions" })
@@ -80,8 +68,7 @@ end
 -- sessions
 vim.keymap.set("n", "<leader>fs", "<cmd>SessionSearch<CR>", { desc = "Find session" })
 
--- terminal + lazygit
-vim.keymap.set("n", "<F7>", "<cmd>ToggleTerm direction=float<CR>", { noremap = true, silent = true, desc = "Toggle floating terminal" })
+-- lazygit
 vim.keymap.set("n", "<leader>gg", function()
 	require("user.utils").lazygit_toggle()
 end, { noremap = true, silent = true, desc = "Toggle LazyGit" })

@@ -23,7 +23,8 @@ dap.listeners.before.event_exited["dapui_config"] = function()
 	dapui.close()
 end
 
--- extra listeners (match your original)
+-- attach and launch fire for the two ways a session can begin, so the UI opens
+-- whether the debugger started the process or connected to a running one.
 dap.listeners.before.attach.dapui_config = function()
 	dapui.open()
 end

@@ -1,10 +1,10 @@
--- custom function to copy paths 
 local ok, neotree = pcall(require, "neo-tree")
 if not ok then return end
 
 neotree.setup({
   window = {
     mappings = {
+      -- Y: pick which form of the node's path to put on the clipboard.
       ['Y'] = function(state)
         local node = state.tree:get_node()
         local filepath = node:get_id()

@@ -8,7 +8,6 @@ local servers = {
 	clangd = {},
 	bashls = {},
 	jdtls = {},
-	-- ltex = {}, -- temporarily blocked as it was causing that dumb Japanese error
 	ltex = {
 		cmd = { "ltex-ls-plus" }, -- <- use the forked server binary
 		filetypes = { "tex", "plaintex", "markdown", "quarto", "rmd" },
@@ -17,7 +16,6 @@ local servers = {
 				language = "en-US",
 				languageDetection = false,
 				logLevel = "severe",
-				-- your other prefs…
 			},
 		},
 	},

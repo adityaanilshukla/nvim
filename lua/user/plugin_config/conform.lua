@@ -42,7 +42,10 @@ conform.setup({
 	},
 })
 
--- 4) keymaps.lua — make mappings resilient if Conform isn’t loaded yet
+-- The format mappings live here rather than in keymaps.lua so they can require
+-- conform lazily and say so plainly when it is missing, instead of throwing.
+-- Keeping them beside the setup they depend on is also what stops a second copy
+-- drifting into keymaps.lua again.
 local function fmt()
 	local okc, c = pcall(require, "conform")
 	if okc then
@@ -52,7 +55,7 @@ local function fmt()
 	end
 end
 vim.keymap.set("n", "<leader>F", fmt, { desc = "Conform: Format buffer" })
-vim.keymap.set("n", "<leader>lf", fmt, { desc = "Conform: Format buffer" }) -- overrides old LSP format
+vim.keymap.set("n", "<leader>lf", fmt, { desc = "Conform: Format buffer" })
 
 -- Optional: let `gq` use Conform
 vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"

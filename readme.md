@@ -24,14 +24,16 @@ This is my personal Neovim setup.
   - `toggle_neotree_focus()` → jump between Neo-tree and last buffer
 
 - **`user/autocmds.lua`**  
-  Optional. For custom autocommands.
+  Currently an empty placeholder -- it holds a commented-out example and
+  nothing else. `init.lua` loads it through `pcall`, so it is safe to leave
+  empty or delete outright.
 
 ---
 
 ## Plugin Configs
 
-Each plugin gets its own file under `user/plugin_config/`.  
-They all follow the pattern:
+Each plugin gets its own file under `user/plugin_config/`. Most follow the
+pattern:
 
 ```lua
 local ok, plugin = pcall(require, "plugin-name")
@@ -40,13 +42,16 @@ if not ok then return end
 plugin.setup({...})
 ```
 
-So if a plugin is missing, Neovim won’t crash.
+The one-liners (`devicons`, `comment`, `render-markdown`) wrap the whole call
+in `pcall(function() ... end)` instead, and `utilsnips` only sets `vim.g`
+variables, which cannot fail. Either way a missing plugin does not crash
+startup.
 
 Notable configs:
 
 - **theme.lua** → colorscheme (default: `carbonfox`, fallback: `kanagawa`)
 - **neo-tree.lua** → includes my custom `Y` keybinding to copy paths
-- **toggleterm.lua** → float terminal with `<F7>`
+- **toggleterm.lua** → full-screen terminal in a new tab, toggled with `<F7>`
 - **auto-session.lua** → auto session save/restore
 - **render-markdown.lua** → renders Markdown previews inline
 
@@ -62,7 +67,7 @@ paru -S neovim-remote # needed for inverse search (nvr)
 
 ---
 
-### LaTeX suport
+### LaTeX support
 
 ```sh
 sudo pacman -S --needed texlive-bin texlive-basic texlive-latex texlive-latexrecommended \
@@ -77,7 +82,22 @@ paru -S --needed pandoc-bin
 
 ### Treesitter
 
-`nvim-treesitter` runs on the `main` branch; the legacy `master` was archived in May 2025 and breaks on recent Neovim. On a fresh machine, the first launch downloads and compiles parsers from source — needs a C compiler (already covered by `base-devel` in Core Runtimes) and network access. Startup blocks once with a notification while parsers install; subsequent launches are no-ops.
+`nvim-treesitter` runs on the `main` branch; the legacy `master` was archived
+in May 2025 and breaks on recent Neovim.
+
+On `main`, parsers are built by shelling out to the **`tree-sitter` CLI** — a
+C compiler alone is not enough, so `base-devel` does not cover this:
+
+```bash
+sudo pacman -S --needed tree-sitter-cli
+which tree-sitter   # should print /usr/bin/tree-sitter
+```
+
+On a fresh machine the first launch then downloads and compiles parsers from
+source, which also needs network access. Startup blocks once with a
+notification while they install; subsequent launches are no-ops. See
+`readme.macos.md` for the same trap on Homebrew, where the library and the CLI
+are two separate formulas.
 
 Edit the `parsers` list in `user/plugin_config/treesitter.lua` to add or remove languages, then restart or run `:TSUpdate`.
 
@@ -93,7 +113,14 @@ All language server config is modular under `user/lsp/`:
   Example: `lua_ls` ignores `vim` as an undefined global.
 
 - **`init.lua`**  
-  Iterates over servers and sets them up with `lspconfig`.
+  Applies the shared capabilities with `vim.lsp.config("*", ...)`, merges each
+  per-server table from `servers.lua` over its upstream defaults, then enables
+  them with `vim.lsp.enable`.
+
+  `nvim-lspconfig` is only a data package here: it ships one `lsp/<name>.lua`
+  per server on the runtimepath and Neovim reads those directly. The older
+  `lspconfig[name].setup()` framework path is deprecated upstream and is no
+  longer used.
 
 To add a new language server, just edit `servers.lua`.
 
@@ -113,13 +140,9 @@ All debugging lives in `user/dap/`:
 
 ## Language Specific Settings
 
-Under `after/ftplugin/` for per-language tweaks:
-
-- `lua.lua` → Lua specific options
-- `python.lua` → Python specific options
-- `javascript.lua` → JavaScript specific options
-
-Neovim automatically loads these when editing that filetype.
+Per-language tweaks go in `after/ftplugin/{lang}.lua`, which Neovim loads
+automatically when editing that filetype. None exist at the moment -- add one
+when a language actually needs its own options.
 
 ---
 
@@ -208,8 +231,10 @@ lldb --version && gdb --version
 
 ## Notes for Future Me
 
-- Statusline is transparent (patched in `theme.lua`).
+- Statusline is transparent. Note it is currently patched in BOTH `theme.lua`
+  and `options.lua`, with identical lines; `theme.lua` wins by load order.
 - Default colorscheme is `carbonfox`. If it’s missing, falls back to `kanagawa`.
 - Sessions auto-save except in `$HOME`.
 - Spell checking is enabled (`en_us`), with `sc` or `gs` mapped to suggestions.
-- All plugin configs are safe-loaded with `pcall` to avoid startup crashes.
+- Plugin configs are `pcall`-guarded so a missing plugin cannot crash startup
+  (see the note under Plugin Configs for the two shapes this takes).
