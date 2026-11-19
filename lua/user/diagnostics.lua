@@ -1,14 +1,17 @@
 -- Inline diagnostics (ghost text), the cursor-hold popup, and toggles for
 -- both -- plus an inlay-hint toggle at the bottom.
 
--- Always define letter signs; we'll re-apply when signs are re-enabled
-local function define_diag_signs()
-	for t, s in pairs({ Error = "E", Warn = "W", Info = "I", Hint = "H" }) do
-		local hl = "DiagnosticSign" .. t
-		vim.fn.sign_define(hl, { text = s, texthl = hl, numhl = "" })
-	end
-end
-define_diag_signs()
+-- Letter signs in the gutter rather than the default icons, declared through
+-- vim.diagnostic.config below. vim.fn.sign_define was the old way in, and it
+-- needed re-running every time signs were switched back on; passing the table
+-- (or false) makes the toggle a single value change and drops the helper that
+-- existed only to re-define them.
+local SIGN_TEXT = {
+	[vim.diagnostic.severity.ERROR] = "E",
+	[vim.diagnostic.severity.WARN] = "W",
+	[vim.diagnostic.severity.INFO] = "I",
+	[vim.diagnostic.severity.HINT] = "H",
+}
 
 -- ghost text formatter
 local function vt_format(d)
@@ -32,14 +35,11 @@ local function apply_diag()
 	vim.diagnostic.config({
 		virtual_text = DIAG.vt and { prefix = "▎", spacing = 1, source = "if_many", format = vt_format } or false,
 		underline = true,
-		signs = DIAG.signs,
+		signs = DIAG.signs and { text = SIGN_TEXT } or false,
 		update_in_insert = false,
 		severity_sort = true,
 		float = { border = "rounded", source = "if_many", focusable = false },
 	})
-	if DIAG.signs then
-		define_diag_signs()
-	end -- ensure W/I/H/E letters come back
 end
 apply_diag()
 

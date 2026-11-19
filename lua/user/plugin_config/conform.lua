@@ -7,7 +7,7 @@ conform.setup({
 	notify_on_error = false,
 	format_on_save = function(bufnr)
 		local max = 200 * 1024
-		local okfs, st = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(bufnr))
+		local okfs, st = pcall(vim.uv.fs_stat, vim.api.nvim_buf_get_name(bufnr))
 		if okfs and st and st.size > max then
 			return nil
 		end
